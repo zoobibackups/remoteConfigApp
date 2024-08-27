@@ -31,7 +31,7 @@ export const AdView = React.memo(({index, media, type, loadOnMount = true}) => {
     const onAdFailedToLoad = event => {
         setError(true);
         setLoading(false);
-        Logger('AD', 'FAILED', event);
+        console.log(event);
     };
 
     const onAdLoaded = () => {
@@ -68,7 +68,7 @@ export const AdView = React.memo(({index, media, type, loadOnMount = true}) => {
     return (
         <NativeAdView
             ref={nativeAdRef}
-            adUnitID={TestIds.Image}
+            adUnitID={"ca-app-pub-3940256099942544/3986624511"}
             onAdLoaded={onAdLoaded}
             onAdFailedToLoad={onAdFailedToLoad}
             onAdLeftApplication={onAdLeftApplication}

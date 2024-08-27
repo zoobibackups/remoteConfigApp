@@ -1601,6 +1601,8 @@ PODS:
     - React-logger (= 0.75.1)
     - React-perflogger (= 0.75.1)
     - React-utils (= 0.75.1)
+  - RNCAsyncStorage (2.0.0):
+    - React-Core
   - RNFBApp (20.4.0):
     - Firebase/CoreOnly (= 10.29.0)
     - React-Core
@@ -1817,6 +1819,7 @@ DEPENDENCIES:
   - React-utils (from `../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCodegen (from `build/generated/ios`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
   - "RNFBRemoteConfig (from `../node_modules/@react-native-firebase/remote-config`)"
@@ -1979,6 +1982,8 @@ EXTERNAL SOURCES:
     :path: build/generated/ios
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBCrashlytics:
@@ -2081,6 +2086,7 @@ SPEC CHECKSUMS:
   React-utils: 7bc806f589085dcc341cb005b03620cf4394eb31
   ReactCodegen: 8a76b467a05b55b3487fc7499c4cc1ec6fe453de
   ReactCommon: 8eeefff0ead38a399e90e275ddc15f489c172725
+  RNCAsyncStorage: d35c79ffba52c1013013e16b1fc295aec2feabb6
   RNFBApp: 10819a4f67d634fe34aa607c6d1e8a8aef019308
   RNFBCrashlytics: f465771d96a2eaf9f6104b30abb002cfe78fc0be
   RNFBRemoteConfig: 335d444ea721a019deafcae9c7ebda7092e27260
