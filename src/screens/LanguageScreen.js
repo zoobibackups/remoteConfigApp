@@ -1,88 +1,101 @@
-import {Box, NativeBaseProvider, Text} from 'native-base';
-import React, {useState} from 'react';
+import { Text } from 'native-base';
+import React, { useState } from 'react';
 import {
     FlatList,
     Image,
+    SafeAreaView,
     StyleSheet,
     TouchableOpacity,
     View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
-import {AdView} from '../components/AdView';
+import { useSelector } from 'react-redux';
+import { AdView } from '../components/AdView';
 import fonts from '../constants/fonts';
-import {hp, moderateScale, wp} from '../constants/scaling';
+import { hp, moderateScale, wp } from '../constants/scaling';
 import theme from '../constants/theme';
 import Languages from '../utils/translations';
+import { useDispatch } from 'react-redux';
+import { setSelectedLanguage } from '../store/actions/languageActions';
 export default function LanguageScreen() {
+    const dispatch = useDispatch();
+
     const [is_selected, setIsSelected] = useState(false);
-    const {selectedLanguage} = useSelector(state => state.languageReducer);
+    const { selectedLanguage } = useSelector(state => state.languageReducer);
+    const [loadOnMount, setLoadOnMount] = useState(false);
     return (
-        <NativeBaseProvider>
-            <Box flex={1} bg="#fff" alignItems="center" justifyContent="center">
-                <FlatList
-                    numColumns={2}
-                    data={Languages}
-                    renderItem={({item, index}) => {
-                        return (
-                            <TouchableOpacity
-                                key={`${index}`}
-                                style={styles.languageBox}>
-                                <Image
-                                    source={{uri: item.flag}}
-                                    resizeMode={'cover'}
-                                    style={{
-                                        width: wp(12),
-                                        borderRadius: moderateScale(5),
-                                        height: wp(8),
-                                    }}
-                                />
+        <SafeAreaView style={styles.container}>
+            <FlatList
+                numColumns={2}
+                showsVerticalScrollIndicator={false}
+                bounces={false}
+                data={Languages}
+                columnWrapperStyle={{
+                    justifyContent:"space-between"
+                }}
+                renderItem={({ item, index }) => {
+                    return (
+                        <TouchableOpacity
+                            key={`${index}`}
+                            onPress={() => {
+                                setLoadOnMount(!loadOnMount)
+                                dispatch(setSelectedLanguage(item.code));
+                                setIsSelected(true)
+                            }}
+                            style={styles.languageBox}>
+                            <Image
+                                source={{ uri: item.flag }}
+                                resizeMode={'cover'}
+                                style={{
+                                    width: wp(12),
+                                    borderRadius: moderateScale(5),
+                                    height: wp(8),
+                                }}
+                            />
+                            <View
+                                style={{
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                }}>
+                                <Text style={styles.languageText}>
+                                    {item.name}
+                                </Text>
                                 <View
                                     style={{
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        alignItems: 'center',
-                                    }}>
-                                    <Text style={styles.languageText}>
-                                        {item.name}
-                                    </Text>
-                                    <View
-                                        style={{
-                                            ...styles.RadioOut,
-                                            borderColor:
-                                                selectedLanguage == item.code &&
+                                        ...styles.RadioOut,
+                                        borderColor:
+                                            selectedLanguage == item.code &&
                                                 is_selected
-                                                    ? theme.primaryColor
-                                                    : theme.borderColor,
-                                        }}>
-                                        {selectedLanguage == item.code &&
-                                            is_selected && (
-                                                <View style={styles.RadioIn} />
-                                            )}
-                                    </View>
+                                                ? theme.primaryColor
+                                                : theme.borderColor,
+                                    }}>
+                                    {selectedLanguage == item.code &&
+                                        is_selected && (
+                                            <View style={styles.RadioIn} />
+                                        )}
                                 </View>
-                            </TouchableOpacity>
-                        );
-                    }}
-                />
-            </Box>
-            <AdView />
-        </NativeBaseProvider>
+                            </View>
+                        </TouchableOpacity>
+                    );
+                }}
+                ListFooterComponent={<View style={styles.AdView} >
+                    <AdView loadOnMount={loadOnMount} />
+                </View>}
+            />
+
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    SafeAreaView: {
+    container: {
         flex: 1,
         backgroundColor: theme.whiteColor,
+        alignItems: "center"
     },
-    logoStyle: {
-        width: wp(40),
-        alignSelf: 'center',
-        height: wp(40),
-        marginTop: wp(30),
-    },
+
     languageBox: {
-        width: wp(44),
+        width: wp(48),
         padding: moderateScale(10),
         alignSelf: 'center',
         marginTop: moderateScale(10),
@@ -121,10 +134,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         alignSelf: 'center',
-        width: wp(92),
-        paddingVertical: moderateScale(10),
-        marginTop: wp(2),
-        height: hp(20),
-        borderColor: theme.blackColor,
+        width: wp(96),
+        marginTop:10,
+        borderColor: theme.inputbgColor,
     },
 });

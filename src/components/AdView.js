@@ -10,20 +10,23 @@ import NativeAdView, {
     CallToActionView,
     HeadlineView,
     IconView,
-    StarRatingView,
+    StarRatingView, AdBadge,
     StoreView,
     TaglineView,
     TestIds,
 } from 'react-native-admob-native-ads';
 import { MediaView } from './MediaView';
+import Config from '../../env';
+import fonts from '../constants/fonts';
+import ShimmerPlaceholder from './ShimmerPlaceholder';
 
 function Logger(tag = 'AD', type, value) {
     console.log(`[${tag}][${type}]:`, value);
 }
 
-export const AdView = React.memo(({index, media, type, loadOnMount = true}) => {
+export const AdView =({ index, media, type, loadOnMount = true }) => {
     const [aspectRatio, setAspectRatio] = useState(1.5);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
     const [loaded, setLoaded] = useState(false);
     const [error, setError] = useState(false);
     const nativeAdRef = useRef();
@@ -31,11 +34,12 @@ export const AdView = React.memo(({index, media, type, loadOnMount = true}) => {
     const onAdFailedToLoad = event => {
         setError(true);
         setLoading(false);
-        console.log(event);
+        console.log(event, "failed");
     };
 
-    const onAdLoaded = () => {
-        Logger('AD', 'LOADED', 'Ad has loaded successfully');
+    const onAdLoaded = (data) => {
+        console.log(data,'ATATATATATTA');
+        // Logger('AD', 'LOADED', 'Ad has loaded successfully');
     };
 
     const onAdClicked = () => {
@@ -46,7 +50,7 @@ export const AdView = React.memo(({index, media, type, loadOnMount = true}) => {
         Logger('AD', 'IMPRESSION', 'Ad impression recorded');
     };
 
-    const onNativeAdLoaded = event => {
+    const onNativeAdLoaded = event => {        
         Logger('AD', 'RECIEVED', 'Unified ad  Recieved', event);
         setLoading(false);
         setLoaded(true);
@@ -59,25 +63,25 @@ export const AdView = React.memo(({index, media, type, loadOnMount = true}) => {
     };
 
     useEffect(() => {
-        if (!loaded) {
             nativeAdRef.current?.loadAd();
-        } else {
-            Logger('AD', 'LOADED ALREADY');
-        }
-    }, [loaded]);
+    }, [loadOnMount]);
     return (
         <NativeAdView
             ref={nativeAdRef}
-            adUnitID={"ca-app-pub-3940256099942544/3986624511"}
+            adUnitID={"ca-app-pub-3940256099942544/1044960115"}
             onAdLoaded={onAdLoaded}
             onAdFailedToLoad={onAdFailedToLoad}
             onAdLeftApplication={onAdLeftApplication}
             onAdClicked={onAdClicked}
             onAdImpression={onAdImpression}
             onNativeAdLoaded={onNativeAdLoaded}
-            refreshInterval={60000 * 2}
+            refreshInterval={3000}
+            //repository={'clipFeedNativeAd'}
             style={{
                 width: '100%',
+                backgroundColor: "#0001",
+                borderWidth: 1,
+                borderColor: "#0003",
                 alignSelf: 'center',
             }}
             videoOptions={{
@@ -86,129 +90,114 @@ export const AdView = React.memo(({index, media, type, loadOnMount = true}) => {
             mediationOptions={{
                 nativeBanner: true,
             }}
-            // adUnitID={type === 'image' ? adUnitIDs.image : adUnitIDs.video} // REPLACE WITH NATIVE_AD_VIDEO_ID for video ads.
-            repository={type === 'image' ? 'imageAd' : 'videoAd'}>
+        >
+
+            {loading ? <ShimmerPlaceholder /> :
+            <View>
             <View
                 style={{
+                    height: 70,
                     width: '100%',
+                    flexDirection: 'row',
                     alignItems: 'center',
+                    paddingHorizontal: 10,
+                    opacity: loading || error || !loaded ? 0 : 1,
+                    maxWidth: '100%',
                 }}>
+                <IconView
+                    style={{
+                        width: 60,
+                        height: 60,
+                    }}
+                />
                 <View
                     style={{
-                        width: '100%',
-                        height: '100%',
-                        backgroundColor: '#f0f0f0',
-                        position: 'absolute',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        opacity: !loading && !error && loaded ? 0 : 1,
-                        zIndex: !loading && !error && loaded ? 0 : 10,
+                        paddingHorizontal: 6,
+                        flexShrink: 1,
                     }}>
-                    {!loading && (
-                        <ActivityIndicator size={28} color="#a9a9a9" />
-                    )}
-                    {error && <Text style={{color: '#a9a9a9'}}>:-(</Text>}
-                </View>
-
-                <View
-                    style={{
-                        height: 100,
-                        width: '100%',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        paddingHorizontal: 10,
-                        opacity: loading || error || !loaded ? 0 : 1,
-                        maxWidth: '100%',
-                    }}>
-                    <IconView
+                    <HeadlineView
+                        hello="abc"
                         style={{
-                            width: 60,
-                            height: 60,
+                            fontWeight: 'bold',
+                            fontSize: 13,
+                            color: 'black',
                         }}
                     />
+                    <TaglineView
+                        numberOfLines={2}
+                        style={{
+                            fontSize: 11,
+                            color: 'black',
+                        }}
+                    />
+                    <AdvertiserView
+                        style={{
+                            fontSize: 10,
+                            color: 'gray',
+                        }}
+                    />
+
                     <View
                         style={{
-                            paddingHorizontal: 6,
-                            flexShrink: 1,
+                            flexDirection: 'row',
+                            marginTop: 2,
+                            alignItems: 'center',
                         }}>
-                        <HeadlineView
-                            hello="abc"
+                        <AdBadge textStyle={{ fontFamily: fonts.Medium, fontSize: 10, color: "#fff" }} style={{ width: 25, backgroundColor: "#f57105", borderColor: "#f57105", height: 16 }} />
+                        <StoreView
                             style={{
-                                fontWeight: 'bold',
-                                fontSize: 13,
+                                marginLeft: 30,
+                                fontSize: 12,
                                 color: 'black',
                             }}
                         />
-                        <TaglineView
-                            numberOfLines={2}
+                        <StarRatingView
+                            starSize={12}
+                            fullIconColor="#f57105"
+                            emptyStarColor="gray"
                             style={{
-                                fontSize: 11,
-                                color: 'black',
-                            }}
-                        />
-                        <AdvertiserView
-                            style={{
-                                fontSize: 10,
-                                color: 'gray',
+                                width: 65,
+                                marginLeft: 10,
                             }}
                         />
 
-                        <View
-                            style={{
-                                flexDirection: 'row',
-                                alignItems: 'center',
-                            }}>
-                            <StoreView
-                                style={{
-                                    fontSize: 12,
-                                    color: 'black',
-                                }}
-                            />
-                            <StarRatingView
-                                starSize={12}
-                                fullStarColor="orange"
-                                emptyStarColor="gray"
-                                style={{
-                                    width: 65,
-                                    marginLeft: 10,
-                                }}
-                            />
-                        </View>
                     </View>
-
-                    <CallToActionView
-                        style={[
-                            {
-                                minHeight: 45,
-                                paddingHorizontal: 12,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                elevation: 10,
-                                maxWidth: 100,
-                                width: 80,
-                            },
-                            Platform.OS === 'ios'
-                                ? {
-                                      backgroundColor: '#FFA500',
-                                      borderRadius: 10,
-                                  }
-                                : {},
-                        ]}
-                        buttonAndroidStyle={{
-                            backgroundColor: '#FFA500',
-                            borderRadius: 10,
-                        }}
-                        allCaps
-                        textStyle={{
-                            fontSize: 13,
-                            flexWrap: 'wrap',
-                            textAlign: 'center',
-                            color: 'white',
-                        }}
-                    />
                 </View>
-                {media ? <MediaView aspectRatio={aspectRatio} /> : null}
-            </View>
+
+                <CallToActionView
+                    style={[
+                        {
+                            minHeight: 30,
+                            paddingHorizontal: 12,
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            elevation: 10,
+                            maxWidth: 100,
+                            width: 80,
+                        },
+                        Platform.OS === 'ios'
+                            ? {
+                                backgroundColor: '#f57105',
+                                borderRadius: 4,
+                            }
+                            : {},
+                    ]}
+                    buttonAndroidStyle={{
+                        backgroundColor: '#f57105',
+                        borderRadius: 10,
+                    }}
+                    allCaps
+                    textStyle={{
+                        fontSize: 13,
+                        fontFamily: fonts.SemiBold,
+                        flexWrap: 'wrap',
+                        textAlign: 'center',
+                        color: 'white',
+                    }}
+                />
+            </View> 
+            <MediaView aspectRatio={aspectRatio} />
+            </View>}
         </NativeAdView>
     );
-});
+}
