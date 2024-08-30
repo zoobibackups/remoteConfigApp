@@ -36,7 +36,7 @@ const IntroScreen = ({navigation}) => {
     <TouchableOpacity
       onPress={() => {
         dispatch(setInitialRoute('GettingStartedScreen'));
-        navigation.navigate(AuthRoutes.GettingStartedScreen);
+        navigation.navigate("PermissionScreen");
       }}
       style={customstyles.buttonStyle}>
       <Text allowFontScaling={true} style={customstyles.buttonTxt}>

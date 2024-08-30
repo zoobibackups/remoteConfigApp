@@ -10,7 +10,7 @@ function AuthStack() {
     return (
         <Stack.Navigator
             screenOptions={{
-                headerBackTitleVisible:false,
+                headerBackTitleVisible: false,
                 headerStyle: {
                     backgroundColor: '#0090FF',
                 },
@@ -21,10 +21,10 @@ function AuthStack() {
                 },
                 headerTintColor: '#ffffff',
             }}>
-            <Stack.Screen name="LanguageScreen" component={LanguageScreen} />
-            <Stack.Screen
-                name="IntroductionScreen"
-                component={IntroductionScreen}
+            <Stack.Screen 
+                name="LanguageScreen" 
+                component={LanguageScreen} 
+                options={{ title: 'Select Language' }} 
             />
             <Stack.Screen
                 name="LanguageSecondaryScreen"
@@ -32,8 +32,14 @@ function AuthStack() {
                 options={{ title: 'Select Language' }}
             />
             <Stack.Screen
+                name="IntroductionScreen"
+                component={IntroductionScreen}
+                options={{ title: 'Intro Screen' }}
+            />
+            <Stack.Screen
                 name="PermissionScreen"
                 component={PermissionScreen}
+                options={{ title: 'Permissions' }}
             />
         </Stack.Navigator>
     );

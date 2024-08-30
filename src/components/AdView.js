@@ -1,16 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
     ActivityIndicator,
+    Image,
     Platform,
+    StyleSheet,
     Text,
-    View
+    View,
 } from 'react-native';
 import NativeAdView, {
     AdvertiserView,
     CallToActionView,
     HeadlineView,
     IconView,
-    StarRatingView, AdBadge,
+    StarRatingView, NativeMediaView,
+    AdBadge,
     StoreView,
     TaglineView,
     TestIds,
@@ -19,6 +22,7 @@ import { MediaView } from './MediaView';
 import Config from '../../env';
 import fonts from '../constants/fonts';
 import ShimmerPlaceholder from './ShimmerPlaceholder';
+import { wp } from '../constants/scaling';
 
 function Logger(tag = 'AD', type, value) {
     console.log(`[${tag}][${type}]:`, value);
@@ -34,10 +38,10 @@ export const AdView = ({ index, media, type, loadOnMount = true }) => {
     const onAdFailedToLoad = event => {
         setError(true);
         setLoading(false);
-        console.log(event, "failed");
+        console.log(event, 'failed');
     };
 
-    const onAdLoaded = (data) => {
+    const onAdLoaded = data => {
         console.log(data, 'ATATATATATTA');
         // Logger('AD', 'LOADED', 'Ad has loaded successfully');
     };
@@ -51,6 +55,8 @@ export const AdView = ({ index, media, type, loadOnMount = true }) => {
     };
 
     const onNativeAdLoaded = event => {
+        setLoading(false);
+        setLoading(false);
         Logger('AD', 'RECIEVED', 'Unified ad  Recieved', event);
         setLoading(false);
         setLoaded(true);
@@ -64,7 +70,7 @@ export const AdView = ({ index, media, type, loadOnMount = true }) => {
 
     useEffect(() => {
         nativeAdRef.current?.loadAd();
-    }, [loadOnMount]);
+    }, []);
     return (
         <NativeAdView
             ref={nativeAdRef}
@@ -76,130 +82,150 @@ export const AdView = ({ index, media, type, loadOnMount = true }) => {
             onAdImpression={onAdImpression}
             onNativeAdLoaded={onNativeAdLoaded}
             refreshInterval={3000}
-            //repository={'clipFeedNativeAd'}
-            style={{
-                width: '100%',
-                backgroundColor: "#0001",
-                borderWidth: 1,
-                borderColor: "#0003",
-                alignSelf: 'center',
-            }}
+            adChoicesPlacement={'topRight'}
+            mediaAspectRatio={'unknown'}
+            style={styles.mainContainer}
             videoOptions={{
                 customControlsRequested: true,
             }}
             mediationOptions={{
                 nativeBanner: true,
-            }}
-        >
-
-            {false ? <ShimmerPlaceholder /> :
-                <View >
+            }}>
+            {loading ? (
+                <ShimmerPlaceholder />
+            ) : (
+                <View style={{ flex: 1, width: wp(96) }}>
                     <View
                         style={{
-                            height: 70,
-                            width: '100%',
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            paddingHorizontal: 10,
+                            ...styles.upperRow,
                             opacity: loading || error || !loaded ? 0 : 1,
-                            maxWidth: '100%',
                         }}>
                         <IconView
-                            style={{
-                                width: 60,
-                                height: 60,
-                            }}
+                            style={styles.iconView}
                         />
                         <View
                             style={{
-                                paddingHorizontal: 6,
+                                paddingHorizontal: 8,
                                 flexShrink: 1,
                             }}>
+                                 <View
+                                style={{
+                                    flexDirection: 'row',
+                                    marginTop: 1,
+                                    alignItems: 'center',
+                                }}>
+                                <AdBadge
+                                    textStyle={{
+                                        fontFamily: fonts.Medium,
+                                        fontSize: 10,
+                                        color: '#fff',
+                                    }}
+                                    style={{
+                                        
+                                        width: 25,
+                                        backgroundColor: '#f57105',
+                                        borderColor: '#f57105',
+                                        height: 16,
+                                    }}
+                                />
                             <HeadlineView
                                 hello="abc"
                                 style={{
-                                    fontWeight: 'bold',
+                                    fontWeight: "700",
                                     fontSize: 13,
+                                    marginLeft:30,
+                                    fontFamily: fonts.Medium,
                                     color: 'black',
                                 }}
                             />
+                            </View>
                             <TaglineView
                                 numberOfLines={2}
                                 style={{
-                                    fontSize: 11,
+                                    fontSize: 12,
+                                    fontFamily: fonts.Medium,
                                     color: 'black',
                                 }}
                             />
                             <AdvertiserView
                                 style={{
                                     fontSize: 10,
+                                    fontFamily: fonts.Medium,
                                     color: 'gray',
                                 }}
                             />
 
-                            <View
-                                style={{
-                                    flexDirection: 'row',
-                                    marginTop: 2,
-                                    alignItems: 'center',
-                                }}>
-                                <AdBadge textStyle={{ fontFamily: fonts.Medium, fontSize: 10, color: "#fff" }} style={{ width: 25, backgroundColor: "#f57105", borderColor: "#f57105", height: 16 }} />
-                                <StoreView
-                                    style={{
-                                        marginLeft: 30,
-                                        fontSize: 12,
-                                        color: 'black',
-                                    }}
-                                />
-                                <StarRatingView
-                                    starSize={12}
-                                    fullIconColor="#f57105"
-                                    emptyStarColor="gray"
-                                    style={{
-                                        width: 65,
-                                        marginLeft: 10,
-                                    }}
-                                />
-
-                            </View>
+                           
                         </View>
-
-                        <CallToActionView
-                            style={[
-                                {
-                                    minHeight: 30,
-                                    paddingHorizontal: 12,
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    elevation: 10,
-                                    maxWidth: 100,
-                                    width: 80,
-                                },
-                                Platform.OS === 'ios'
-                                    ? {
-                                        backgroundColor: '#f57105',
-                                        borderRadius: 4,
-                                    }
-                                    : {},
-                            ]}
-                            buttonAndroidStyle={{
-                                backgroundColor: '#f57105',
-                                borderRadius: 10,
-                            }}
-                            allCaps
-                            textStyle={{
-                                fontSize: 13,
-                                fontFamily: fonts.SemiBold,
-                                flexWrap: 'wrap',
-                                textAlign: 'center',
-                                color: 'white',
-                            }}
-                        />
                     </View>
-                    <MediaView aspectRatio={aspectRatio} />
-                </View>}
+                    
+                    <NativeMediaView
+                        resizeMode={"contain"} 
+                        style={styles.mediaView}
+                    />
+                    <CallToActionView
+                        style={styles.buttonStyle}
+                        allCaps
+                        textStyle={styles.buttonTxtStyle}
+                    />
+                </View>
+            )}
         </NativeAdView>
     );
-}
+};
 
-export default AdView
+export default AdView;
+
+const styles = StyleSheet.create({
+    mainContainer: {
+        width: '100%',
+        backgroundColor: '#ffff',
+        borderWidth: 1,
+        borderRadius: 7,
+        borderColor: '#0003',
+        alignSelf: 'center',
+    },
+    upperRow: {
+        height: 70,
+        width: '100%',
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        maxWidth: '100%',
+    },
+    iconView: {
+        width: 62,
+        height: 62,
+        borderRadius: 7
+    },
+    mediaView:{
+        width: wp(100) - 40,
+        height: 160, 
+        maxHeight:160,
+        borderRadius:7,
+        overflow:"hidden",
+        backgroundColor: '#00000065',
+        alignSelf: "center"
+    },
+    buttonStyle: {
+        minHeight: 45,
+        paddingHorizontal: 12,
+        justifyContent: 'center',
+        alignItems: 'center',
+        elevation: 10,
+        marginVertical: 5,
+        backgroundColor: "#f57105",
+        borderRadius: 100,
+
+        alignSelf: 'center',
+        
+        width: wp(92),
+    },
+    buttonTxtStyle: {
+        fontSize: 13,
+        fontFamily: fonts.Bold,
+        flexWrap: 'wrap',
+        textAlign: 'center',
+        color: 'white',
+    }
+});
