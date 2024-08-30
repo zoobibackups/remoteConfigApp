@@ -1,5 +1,5 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LanguageScreen from '../screens/LanguageScreen';
 import IntroductionScreen from '../screens/IntroductionScreen';
 import LanguageSecondaryScreen from '../screens/LanguageSecondaryScreen';
@@ -10,6 +10,7 @@ function AuthStack() {
     return (
         <Stack.Navigator
             screenOptions={{
+                headerBackTitleVisible:false,
                 headerStyle: {
                     backgroundColor: '#0090FF',
                 },
@@ -18,6 +19,7 @@ function AuthStack() {
                     fontSize: 14,
                     color: '#ffffff',
                 },
+                headerTintColor: '#ffffff',
             }}>
             <Stack.Screen name="LanguageScreen" component={LanguageScreen} />
             <Stack.Screen
@@ -27,6 +29,7 @@ function AuthStack() {
             <Stack.Screen
                 name="LanguageSecondaryScreen"
                 component={LanguageSecondaryScreen}
+                options={{ title: 'Select Language' }}
             />
             <Stack.Screen
                 name="PermissionScreen"

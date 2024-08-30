@@ -16,7 +16,7 @@ import theme from '../constants/theme';
 import Languages from '../utils/translations';
 import { useDispatch } from 'react-redux';
 import { setSelectedLanguage } from '../store/actions/languageActions';
-export default function LanguageScreen() {
+export default function LanguageScreen({ navigation }) {
     const dispatch = useDispatch();
 
     const [is_selected, setIsSelected] = useState(false);
@@ -30,7 +30,7 @@ export default function LanguageScreen() {
                 bounces={false}
                 data={Languages}
                 columnWrapperStyle={{
-                    justifyContent:"space-between"
+                    justifyContent: "space-between"
                 }}
                 renderItem={({ item, index }) => {
                     return (
@@ -40,6 +40,13 @@ export default function LanguageScreen() {
                                 setLoadOnMount(!loadOnMount)
                                 dispatch(setSelectedLanguage(item.code));
                                 setIsSelected(true)
+                                if (item.hasSecondary) {
+                                    navigation.navigate("LanguageSecondaryScreen",{
+                                        Languages:item.secondaryLanguage
+                                    })
+                                } else {
+                                    navigation.navigate("IntroductionScreen")
+                                }
                             }}
                             style={styles.languageBox}>
                             <Image
@@ -135,7 +142,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignSelf: 'center',
         width: wp(96),
-        marginTop:10,
+        marginTop: 10,
         borderColor: theme.inputbgColor,
     },
 });
